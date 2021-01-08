@@ -54,7 +54,7 @@ namespace ProtoBuf
             using var state = ProtoReader.State.Create(source, RuntimeTypeModel.Default, null, ProtoReader.TO_EOF);
             return state.DeserializeRootFallback(null, type);
         }
-        public static object Deserialize(Type type, in ReadOnlyMemory<byte> source)
+        public static object Deserialize([DynamicallyAccessedMembers(DynamicAccess.ContractType)] Type type, in ReadOnlyMemory<byte> source)
         {
             using var state = ProtoReader.State.Create(source, RuntimeTypeModel.Default, null);
             return state.DeserializeRootFallback(null, type);
