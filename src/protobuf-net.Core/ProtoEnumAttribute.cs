@@ -20,7 +20,10 @@ namespace ProtoBuf
             [Obsolete(EnumValueDeprecated, false)]
             get { return default; }
             [Obsolete(EnumValueDeprecated, true)]
-            set { ThrowHelper.ThrowNotSupportedException(); }
+            set
+            {
+                //ThrowHelper.ThrowNotSupportedException();
+            }
         }
 
         /// <summary>
