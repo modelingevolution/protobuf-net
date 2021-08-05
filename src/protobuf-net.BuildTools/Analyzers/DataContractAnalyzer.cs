@@ -169,13 +169,26 @@ namespace ProtoBuf.BuildTools.Analyzers
             defaultSeverity: DiagnosticSeverity.Info,
             isEnabledByDefault: true);
 
+        internal static readonly DiagnosticDescriptor ShouldDeclareDefault = new(
+            id: "PBN0020",
+            title: nameof(DataContractAnalyzer) + "." + nameof(ShouldDeclareDefault),
+            messageFormat: "Field '{0}' should use [DefaultValue({1})] to ensure its value is sent since it's initialized to a non-default value.",
+            category: Literals.CategoryUsage,
+            defaultSeverity: DiagnosticSeverity.Warning,
+            isEnabledByDefault: true,
+            helpLinkUri: "https://stackoverflow.com/a/3162253/1882616");
+
         private static readonly ImmutableArray<DiagnosticDescriptor> s_SupportedDiagnostics = Utils.GetDeclared(typeof(DataContractAnalyzer));
 
         /// <inheritdoc/>
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => s_SupportedDiagnostics;
 
         private static readonly ImmutableArray<SyntaxKind> s_syntaxKinds =
-            ImmutableArray.Create(SyntaxKind.ClassDeclaration, SyntaxKind.StructDeclaration, SyntaxKind.EnumDeclaration);
+            ImmutableArray.Create(SyntaxKind.ClassDeclaration, SyntaxKind.StructDeclaration, SyntaxKind.EnumDeclaration
+#if !PLAT_NO_RECORDS
+                , SyntaxKind.RecordDeclaration
+#endif
+                );
 
         /// <inheritdoc/>
         public override void Initialize(AnalysisContext ctx)
@@ -278,7 +291,7 @@ namespace ProtoBuf.BuildTools.Analyzers
                         foreach (var attrib in field.GetAttributes())
                         {
                             var ac = attrib.AttributeClass;
-                            
+
                             switch (ac?.Name)
                             {
                                 case null: continue;
